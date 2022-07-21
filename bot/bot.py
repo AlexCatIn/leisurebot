@@ -7,7 +7,6 @@ from aiogram.types import BotCommand
 import asyncio
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 import schedule
-import time
 
 
 from crawler.moviedb import Movie, Cinema, Book
@@ -50,14 +49,8 @@ async def interest_chosen(message: types.Message, state: FSMContext):
     if message.text == "Кино дома":
         movie_answer = " "
         for movie in Movie.select().limit(10).order_by(Movie.movie_id.desc()):
-            movie_answer += f' * {movie.name_russian} | {movie.year_production} | {movie.movie_url} \n'
+            movie_answer += f' * {movie.name_russian} | {movie.movie_url} \n'
         await message.answer(movie_answer, reply_markup=types.ReplyKeyboardRemove())
-        await state.finish()
-    elif message.text == "Фильмы в кинотеатре":
-        cinema_answer = " "
-        for cinema in Cinema.select().limit(8).order_by(Cinema.cinema_id.desc()):
-            cinema_answer += f' * {cinema.name_russian} | {cinema.cinema_genre} | {cinema.rate} | {cinema.cinema_url} \n'
-        await message.answer(cinema_answer, reply_markup=types.ReplyKeyboardRemove())
         await state.finish()
     elif message.text == "Книги":
         book_answer = " "
@@ -65,6 +58,12 @@ async def interest_chosen(message: types.Message, state: FSMContext):
             book_answer += f' * {book.name_russian} | {book.author} | {book.rate} | {book.book_url} \n'
         await message.answer(book_answer, reply_markup=types.ReplyKeyboardRemove())
         await state.finish()
+    elif message.text == "Фильмы в кинотеатре":
+        cinema_answer = " "
+        for cinema in Cinema.select().limit(8).order_by(Cinema.cinema_id.desc()):
+            cinema_answer += f' * {cinema.name_russian} | {cinema.cinema_genre} | {cinema.cinema_url} \n'
+        await message.answer(cinema_answer, reply_markup=types.ReplyKeyboardRemove())
+        await state.finish()    
     else:    
         await message.answer(f"Вы выбрали {message.text} в городе {user_data['chosen_city']}.\n" , reply_markup=types.ReplyKeyboardRemove())
         await state.finish()

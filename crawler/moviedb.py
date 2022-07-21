@@ -8,30 +8,26 @@ db3 = SqliteDatabase('books.db')
 class Movie(Model):
     movie_id = AutoField()
     name_russian = CharField()
-    name_origin = CharField()
-    year_production = SmallIntegerField()
     movie_genre = CharField(null=True)
     rate = FloatField(null=True)
-    poster = CharField(null=True)
     movie_url = CharField()
     
 
     class Meta:
         database = db
-        indexes = ((("name_origin", "year_production"), True),)
+        indexes = ((("name_russian", "movie_url", ), True),)
 
 
 class Cinema(Model):
     cinema_id = AutoField()
     name_russian = CharField()
-    description = CharField()
     cinema_genre = CharField(null=True)
-    rate = FloatField(null=True)
     cinema_url = CharField()
+
 
     class Meta:
         database = db2
-        indexes = ((("name_russian", "description"), True),)
+        indexes = ((("name_russian", "cinema_url", ), True),)
 
 
 class Book(Model):
@@ -40,9 +36,10 @@ class Book(Model):
     author = CharField()
     rate = FloatField(null=True)
     book_url = CharField()
+    
 
     class Meta:
-        database = db2
+        database = db3
         indexes = ((("name_russian", "author"), True),)
 
 
